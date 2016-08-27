@@ -278,7 +278,7 @@ abstract class RedisCluster(hosts: ClusterNode*) extends RedisCommand {
   override def srandmember[A](key: Any, count: Int)(implicit format: Format, parse: Parse[A]) = processForKey(key)(_.srandmember(key, count))
 
 
-  import com.redis.RedisClient._
+  import com.redis.RedisClientHelper._
 
   /**
    * SortedSetOperations

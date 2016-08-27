@@ -6,7 +6,7 @@ import org.scalatest.BeforeAndAfterAll
 import org.scalatest.Matchers
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
-import com.redis.RedisClient.{DESC, SUM}
+import com.redis.RedisClientHelper.{DESC, SUM}
 
 
 @RunWith(classOf[JUnitRunner])

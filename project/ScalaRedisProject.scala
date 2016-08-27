@@ -1,6 +1,12 @@
 import sbt._
 import Keys._
 
+/**
+  * Stitchfix changes:
+  *  - Fixed cross scala versions and scalaVersion to match what SFS3 uses
+  *  - Changed publishTo and Credentials to be artifactory
+  *  - Made version 3.2.2
+  */
 object ScalaRedisProject extends Build
 {
   import Resolvers._
@@ -8,9 +14,9 @@ object ScalaRedisProject extends Build
 
   lazy val commonSettings: Seq[Setting[_]] = Seq(
     organization := "net.debasishg",
-    version := "3.2",
+    version := "3.2.1",
     scalaVersion := "2.11.8",
-    crossScalaVersions := Seq("2.11.8", "2.10.6"),
+    crossScalaVersions := Seq("2.10.5", "2.11.8"),
 
     scalacOptions in Compile ++= Seq( "-unchecked", "-feature", "-language:postfixOps", "-deprecation" ),
 
@@ -30,11 +36,11 @@ object ScalaRedisProject extends Build
 
     parallelExecution in Test := false,
     publishTo <<= version { (v: String) => 
-      val nexus = "https://oss.sonatype.org/" 
-      if (v.trim.endsWith("SNAPSHOT")) Some("snapshots" at nexus + "content/repositories/snapshots")
-      else Some("releases" at nexus + "service/local/staging/deploy/maven2") 
+      val artifactory = "http://artifactory.vertigo.stitchfix.com/artifactory/"
+      if (v.trim.endsWith("SNAPSHOT")) Some("StitchFix Snapshots" at artifactory + "snapshots")
+      else Some("StitchFix Releases" at artifactory + "releases")
     },
-    credentials += Credentials(Path.userHome / ".sbt" / "sonatype.credentials"),
+    credentials += Credentials("Artifactory Realm", "artifactory.vertigo.stitchfix.com", "admin", "password"),
     publishMavenStyle := true,
     publishArtifact in Test := false,
     pomIncludeRepository := { repo => false },

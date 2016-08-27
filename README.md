@@ -8,6 +8,9 @@
 - Consistent Hashing on the client.
 - Support for Clustering of Redis nodes.
 
+NOTE: this is a StitchFix fork with some minor simplifications to solve a bizzare error
+that occurs when running with Spark.
+
 ## Information about redis
 
 Redis is a key-value database. It is similar to memcached but the dataset is not volatile, and values can be strings, exactly like in memcached, but also lists and sets with atomic operations to push/pop elements.
@@ -229,6 +232,28 @@ def scatterGatherFirstWithList(opsPerClient: Int)(implicit clients: RedisClientP
   Await.result(firstSum, timeout).asInstanceOf[Int]
 }
 ```
+
+## Spark Errors
+
+The original client had intermittent errors that would occur when constructing a RedisClient
+instance.  This only seems to occur when running with Spark.  The error occurs when calling the constructor
+and is fairly obscure :
+```
+java.lang.NoSuchMethodError: com.redis.RedisClient$.$lessinit$greater$default$3()I
+	at com.stitchfix.algorithms.spark.sfs3.hive.HiveMetastoreAdapter.makeRedisClient(HiveMetastoreAdapter.scala:61)
+    ...
+```
+The line `HiveMetastoreAdapter.scala:61` simply called the RedisClient constructor.  The magical incantation
+`$lessinit$greater$default$3` apparently refers to a default constructor argument in the companion object.
+Why it's not found is unclear but the class has a non-trivial hierarchy of traits and a companion object,
+which possibly fools Scala 2.10 some of the time.
+
+
+To solve this a few simplifications were made to the code:
+* Companion object RedisClient was renamed RedisClientHelper and corresponding imports changed
+* Default arguments were removed from the main constructor
+* No argument constructor removed and replaced with a constructor that only takes a host and port, and sets default
+values for the other arguments
 
 ## License
 

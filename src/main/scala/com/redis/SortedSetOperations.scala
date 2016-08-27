@@ -1,6 +1,7 @@
 package com.redis
 
 import serialization._
+import com.redis.RedisClientHelper._
 
 trait SortedSetOperations {
   self: Redis =>
@@ -33,7 +34,6 @@ trait SortedSetOperations {
   // ZRANGE
   // 
   import Commands._
-  import RedisClient._
 
   def zrange[A](key: Any, start: Int = 0, end: Int = -1, sortAs: SortOrder = ASC)(implicit format: Format, parse: Parse[A]): Option[List[A]] =
     send(if (sortAs == ASC) "ZRANGE" else "ZREVRANGE", List(key, start, end))(asList.map(_.flatten))

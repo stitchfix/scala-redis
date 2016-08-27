@@ -4,7 +4,8 @@ import java.net.SocketException
 
 import com.redis.serialization.Format
 
-object RedisClient {
+/** Note: changed from companion object to separate object to simplify code. */
+object RedisClientHelper {
   trait SortOrder
   case object ASC extends SortOrder
   case object DESC extends SortOrder
@@ -89,15 +90,31 @@ trait RedisCommand extends Redis with Operations
   }
   
 }
-  
 
+
+/**
+  * Main Redis client class that incorporates all of the commands from various traits.
+  *
+  * Simplifications made: 1) removed all default parameters from main constructor
+  * 2) Removed the no arg alt constructor that uses localhost
+  * 3) Added alt constructor with 2 arguments that sets default values for the rest
+  * This is to stop bizarre behavior when running with Spark
+  *
+  *
+  * @param host
+  * @param port
+  * @param database
+  * @param secret
+  * @param timeout
+  */
 class RedisClient(override val host: String, override val port: Int,
-    override val database: Int = 0, override val secret: Option[Any] = None, override val timeout : Int = 0)
+    override val database: Int, override val secret: Option[Any], override val timeout : Int)
   extends RedisCommand with PubSub {
 
   initialize
 
-  def this() = this("localhost", 6379)
+  def this(thehost: String, thePort : Int) = this(thehost, thePort, 0, None, 0)
+
   def this(connectionUri: java.net.URI) = this(
     host = connectionUri.getHost,
     port = connectionUri.getPort,
@@ -105,7 +122,9 @@ class RedisClient(override val host: String, override val port: Int,
       .flatMap(_.split(':') match {
         case Array(_, password, _*) ⇒ Some(password)
         case _ ⇒ None
-      })
+      }),
+    database = 0,
+    timeout = 0
   )
   override def toString = host + ":" + String.valueOf(port)
 
