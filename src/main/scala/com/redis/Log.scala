@@ -1,9 +1,10 @@
 package com.redis
 
-import org.slf4j.LoggerFactory
+
+import org.apache.logging.log4j.{LogManager, Logger}
 
 trait Log {
- private val log = LoggerFactory.getLogger(getClass)
+ private val log : Logger = LogManager.getLogger(getClass)
 
  def ifTrace(message: => String) = if (log.isTraceEnabled) trace(message)
  def trace(message:String, values:AnyRef*) =

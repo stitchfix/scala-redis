@@ -1,12 +1,13 @@
 package com.redis
 
-import akka.actor.{ Actor, ActorSystem, Props }
+//import akka.actor.{ Actor, ActorSystem, Props }
 
 case class PublishMessage(channel: String, message: String)
 case class SubscribeMessage(channels: List[String])
 case class UnsubscribeMessage(channels: List[String])
 case object GoDown
 
+/*
 class Pub extends Actor {
   println("starting publishing service ..")
   val system = ActorSystem("pub")
@@ -86,6 +87,7 @@ class Sub extends Actor {
       }
   }
 }
+*/
 
 /**
 Welcome to Scala version 2.10.2 (Java HotSpot(TM) 64-Bit Server VM, Java 1.6.0_51).

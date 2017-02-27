@@ -3,7 +3,7 @@ package com.redis
 import serialization._
 import scala.concurrent.{ ExecutionContext, Await, Future }
 import scala.concurrent.duration._
-import akka.actor.ActorSystem
+//import akka.actor.ActorSystem
 
 /**
  * Implementing some of the common patterns like scatter/gather, which can benefit from
@@ -40,9 +40,10 @@ object Patterns {
   }
 
   // set up Executors
-  val system = ActorSystem("ScatterGatherSystem")
-  import system.dispatcher
+  //val system = ActorSystem("ScatterGatherSystem")
+  //import system.dispatcher
 
+  /*
   val timeout = 5 minutes
 
   private[this] def flow[A](noOfRecipients: Int, opsPerClient: Int, keyPrefix: String, 
@@ -86,4 +87,5 @@ object Patterns {
     }
     Await.result(firstSum, timeout).asInstanceOf[Int]
   }
+  */
 }

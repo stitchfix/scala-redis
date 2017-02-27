@@ -29,6 +29,7 @@ class PatternsSpec extends FunSpec
     clients.close
   }
 
+  /*
   def runScatterGather(opsPerRun: Int) = {
     val start = System.nanoTime
     val sum = scatterGatherWithList(opsPerRun)
@@ -70,4 +71,5 @@ class PatternsSpec extends FunSpec
       runScatterGatherFirst(5000)
     }
   }
+  */
 }
